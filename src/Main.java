@@ -15,6 +15,7 @@ public class Main {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
             parseEnregistrements(c);
+            parseScenarios(c);
 
             c.close();
         } catch (SQLException | ClassNotFoundException e){
@@ -22,7 +23,30 @@ public class Main {
         }
     }
 
-	private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
+    private static void parseScenarios(Connection c) {
+        try {
+            Statement stmt = null;
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT *  FROM scenario;");
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String startTime = rs.getString("start_time");
+                String endTime = rs.getString("end_time");
+                String elapsedTime = rs.getString("elapsed_time");
+
+                System.out.println("ID = " + name);
+                System.out.println("scenario name = " + startTime);
+                System.out.println("taskId = " + endTime);
+                System.out.println("state = " + elapsedTime);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+    }
+
+    private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
         HashMap<Integer,RawTask> tasks = new HashMap<>();
         try {
 			/*
