@@ -7,7 +7,7 @@ public class Main {
 
 	public static void main(String[] args) {
         Connection c = null;
-        String defaultdbName = "db_files"+ File.separator +"2015-01-16_14-32_EXP23.db";
+        String defaultdbName = "db_files"+ File.separator +"2015-06-26_17-46_EXPMCI23.db";
 
         try {
             Class.forName("org.sqlite.JDBC");
@@ -23,25 +23,24 @@ public class Main {
         }
     }
 
-    private static void parseScenarios(Connection c) {
+    private static Scenario parseScenarios(Connection c) {
+        Scenario scenario = null;
+
         try {
             Statement stmt = null;
+
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM scenario;");
-            while (rs.next()) {
-                Scenario scenario;
+            ResultSet rs = stmt.executeQuery("SELECT * FROM scenario ORDER BY start_time DESC;");
 
-                String name = rs.getString("name");
-                String startTime = rs.getString("start_time");
-                String endTime = rs.getString("end_time");
+            rs.next();
+            String name = rs.getString("name");
+            String startTime = rs.getString("start_time");
+            String endTime = rs.getString("end_time");
 
-                scenario = new Scenario(name, startTime, endTime);
+            scenario = new Scenario(name, startTime, endTime);
 
-                System.out.println("name = " + name);
-                System.out.println("start_time = " + startTime);
-                System.out.println("end_time = " + endTime);
+            System.out.println(scenario);
 
-            }
             rs.close();
             stmt.close();
 
@@ -51,6 +50,7 @@ public class Main {
         }
 
         System.out.println("ParseScenario operation done successfully");
+        return scenario;
     }
 
     private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
