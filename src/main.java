@@ -16,10 +16,10 @@ public class main {
 			 * System.out.println("Entrez le nom complet du fichier"); String
 			 * dbName = br.readLine();
 			 */
-			String defaultdbName = "2015-06-26_17-46_EXPMCI23.db";
+			String defaultdbName = "db_files\\2015-01-16_14-32_EXP23.db";
 
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite: " + defaultdbName);
+			c = DriverManager.getConnection("jdbc:sqlite:" + defaultdbName);
 			c.setAutoCommit(false);
 			System.out.println("Opened database successfully");
 
