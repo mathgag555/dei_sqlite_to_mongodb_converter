@@ -14,8 +14,8 @@ public class Main {
             c = DriverManager.getConnection("jdbc:sqlite:" + defaultdbName);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
-            parseEnregistrements(c);
-            parseScenarios(c);
+            Scenario scenario = parseScenarios(c);
+            parseEnregistrements(c, scenario);
 
             c.close();
         } catch (SQLException | ClassNotFoundException e){
@@ -53,7 +53,7 @@ public class Main {
         return scenario;
     }
 
-    private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
+    private static HashMap<Integer,RawTask> parseEnregistrements(Connection c, Scenario scenario){
         HashMap<Integer,RawTask> tasks = new HashMap<>();
         try {
 			/*
@@ -65,7 +65,11 @@ public class Main {
 
             Statement stmt = null;
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM recording_task;");
+            String query = "SELECT * FROM recording_task WHERE timestamp >= '" + scenario.getStartTime_s() + "' AND timestamp <= '" + scenario.getEndTime_s() + "';";
+
+            System.out.println(query);
+
+            ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 RawTask task,recoveredTask ;
                 Event event;
