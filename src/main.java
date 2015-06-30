@@ -39,7 +39,6 @@ public class main {
             while (rs.next()) {
                 RawTask task,recoveredTask ;
                 Event event;
-                int id = rs.getInt("id");
                 String scenarioName = rs.getString("scenario_name");
                 int taskId = rs.getInt("task_id");
                 String state = rs.getString("state");
@@ -50,14 +49,6 @@ public class main {
                     task=recoveredTask;
                 }
                 task.getEvents().add(event);
-//
-//
-//                System.out.println("ID = " + id);
-//                System.out.println("scenario name = " + scenarioName);
-//                System.out.println("taskId = " + taskId);
-//                System.out.println("state = " + state);
-//                System.out.println("timestamp = " + timestamp);
-
             }
             rs.close();
             stmt.close();

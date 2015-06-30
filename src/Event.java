@@ -1,22 +1,27 @@
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by ranj2004 on 15-06-30.
  */
-@RequiredArgsConstructor
 @ToString
 public class Event {
+    public Event(String timestamp, State state) {
+        this.timestamp = Utils.parseTimeStamp(timestamp);
+        this.state = state;
+    }
+
     enum State {
         ACTIVE,
         FINISHED,
         PAUSED
     }
 
-
     @Getter
-    private final String timestamp;
+    private final LocalDateTime timestamp;
     @Getter
     private final State state;
 }
