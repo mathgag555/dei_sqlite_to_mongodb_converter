@@ -11,7 +11,6 @@ import java.util.ArrayList;
 @ToString
 public class RawTask {
     @Getter private final ArrayList<Event> events = new ArrayList<>();
-    @Getter private final String scenarioName;
     @Getter private final int taskid;
 
 }

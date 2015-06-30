@@ -1,10 +1,9 @@
 import java.io.File;
 import java.lang.System;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class main {
+public class Main {
 
 	public static void main(String[] args) {
         Connection c = null;
@@ -39,11 +38,10 @@ public class main {
             while (rs.next()) {
                 RawTask task,recoveredTask ;
                 Event event;
-                String scenarioName = rs.getString("scenario_name");
                 int taskId = rs.getInt("task_id");
                 String state = rs.getString("state");
                 String timestamp = rs.getString("timestamp");
-                task=new RawTask(scenarioName,taskId);
+                task=new RawTask(taskId);
                 event=new Event(timestamp,Event.State.valueOf(state));
                 if((recoveredTask=tasks.putIfAbsent(taskId,task))!=null){
                     task=recoveredTask;
