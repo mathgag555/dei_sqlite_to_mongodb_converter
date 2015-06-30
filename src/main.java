@@ -1,6 +1,8 @@
 import java.io.File;
 import java.lang.System;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class main {
 
@@ -21,9 +23,8 @@ public class main {
         }
     }
 
-	private static void parseEnregistrements(Connection c){
-
-
+	private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
+        HashMap<Integer,RawTask> tasks = new HashMap<>();
         try {
 			/*
 			 * BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -36,25 +37,36 @@ public class main {
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM recording_task;");
             while (rs.next()) {
+                RawTask task,recoveredTask ;
+                Event event;
                 int id = rs.getInt("id");
                 String scenarioName = rs.getString("scenario_name");
                 int taskId = rs.getInt("task_id");
                 String state = rs.getString("state");
                 String timestamp = rs.getString("timestamp");
-
-                System.out.println("ID = " + id);
-                System.out.println("scenario name = " + scenarioName);
-                System.out.println("taskId = " + taskId);
-                System.out.println("state = " + state);
-                System.out.println("timestamp = " + timestamp);
+                task=new RawTask(scenarioName,taskId);
+                event=new Event(timestamp,Event.State.valueOf(state));
+                if((recoveredTask=tasks.putIfAbsent(taskId,task))!=null){
+                    task=recoveredTask;
+                }
+                task.getEvents().add(event);
+//
+//
+//                System.out.println("ID = " + id);
+//                System.out.println("scenario name = " + scenarioName);
+//                System.out.println("taskId = " + taskId);
+//                System.out.println("state = " + state);
+//                System.out.println("timestamp = " + timestamp);
 
             }
             rs.close();
             stmt.close();
-        } catch (Exception e) {
-            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
             System.exit(0);
         }
+        tasks.values().forEach(task->System.out.println(task.toString()));
         System.out.println("Operation done successfully");
+        return tasks;
     }
 }
