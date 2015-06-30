@@ -1,3 +1,5 @@
+import java.io.File;
+import java.lang.System;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,7 +18,7 @@ public class main {
 			 * System.out.println("Entrez le nom complet du fichier"); String
 			 * dbName = br.readLine();
 			 */
-			String defaultdbName = "db_files\\2015-01-16_14-32_EXP23.db";
+			String defaultdbName = "db_files"+ File.separator +"2015-01-16_14-32_EXP23.db";
 
 			Class.forName("org.sqlite.JDBC");
 			c = DriverManager.getConnection("jdbc:sqlite:" + defaultdbName);
