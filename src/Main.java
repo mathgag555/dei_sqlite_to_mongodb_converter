@@ -27,23 +27,30 @@ public class Main {
         try {
             Statement stmt = null;
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT *  FROM scenario;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM scenario;");
             while (rs.next()) {
+                Scenario scenario;
+
                 String name = rs.getString("name");
                 String startTime = rs.getString("start_time");
                 String endTime = rs.getString("end_time");
-                String elapsedTime = rs.getString("elapsed_time");
+
+                scenario = new Scenario(name, startTime, endTime);
 
                 System.out.println("name = " + name);
-                System.out.println("start = " + startTime);
-                System.out.println("end = " + endTime);
-                System.out.println("elapsed = " + elapsedTime);
+                System.out.println("start_time = " + startTime);
+                System.out.println("end_time = " + endTime);
 
             }
+            rs.close();
+            stmt.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
             System.exit(0);
         }
+
+        System.out.println("ParseScenario operation done successfully");
     }
 
     private static HashMap<Integer,RawTask> parseEnregistrements(Connection c){
@@ -79,7 +86,7 @@ public class Main {
             System.exit(0);
         }
         tasks.values().forEach(task->System.out.println(task.toString()));
-        System.out.println("Operation done successfully");
+        System.out.println("ParseEnregistrement operation done successfully");
         return tasks;
     }
 }
