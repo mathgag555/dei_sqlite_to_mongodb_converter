@@ -34,10 +34,10 @@ public class Main {
                 String endTime = rs.getString("end_time");
                 String elapsedTime = rs.getString("elapsed_time");
 
-                System.out.println("ID = " + name);
-                System.out.println("scenario name = " + startTime);
-                System.out.println("taskId = " + endTime);
-                System.out.println("state = " + elapsedTime);
+                System.out.println("name = " + name);
+                System.out.println("start = " + startTime);
+                System.out.println("end = " + endTime);
+                System.out.println("elapsed = " + elapsedTime);
 
             }
         } catch (SQLException e) {

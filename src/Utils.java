@@ -1,4 +1,7 @@
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -9,5 +12,9 @@ public class Utils {
 
     public static LocalDateTime parseTimeStamp(String timestamp) {
         return LocalDateTime.parse(timestamp,formatter);
+    }
+
+    public static Duration getLocalDuration(LocalDateTime start, LocalDateTime end) {
+        return Duration.between(start,end);
     }
 }
