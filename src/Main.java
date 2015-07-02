@@ -1,7 +1,10 @@
 import java.io.File;
 import java.lang.System;
 import java.sql.*;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -15,7 +18,15 @@ public class Main {
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
             Scenario scenario = parseScenarios(c);
-            parseEnregistrements(c, scenario);
+            Collection<RawTask> rawTasks = parseEnregistrements(c, scenario).values();
+            List<ElaboratedTask> elaboratedTasks = rawTasks.stream()
+                    .map(rawTask -> rawTask.elaborate(scenario.getStartTime()))
+                    .collect(Collectors.toList());
+
+            rawTasks.forEach(rawTask -> {
+                System.out.println(rawTask);
+                System.out.println(rawTask.elaborate(scenario.getStartTime()));
+        });
 
             c.close();
         } catch (SQLException | ClassNotFoundException e){
@@ -71,8 +82,6 @@ public class Main {
                     "' AND timestamp <= '" +
                     scenario.getEndTime_s() + "';";
 
-            System.out.println(query);
-
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 RawTask task,recoveredTask ;
@@ -93,7 +102,7 @@ public class Main {
             e.printStackTrace();
             System.exit(0);
         }
-        tasks.values().forEach(task->System.out.println(task.toString()));
+//        tasks.values().forEach(task->System.out.println(task.toString()));
         System.out.println("ParseEnregistrement operation done successfully");
         return tasks;
     }

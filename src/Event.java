@@ -16,7 +16,10 @@ public class Event {
     enum State {
         ACTIVE,
         FINISHED,
-        PAUSED
+        PAUSED;
+        public boolean isActive(){
+            return this==ACTIVE;
+        }
     }
 
     @Getter
