@@ -2,6 +2,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 /**
@@ -23,4 +24,10 @@ public class Scenario {
     @Getter private final String startTime_s;
     @Getter private final LocalDateTime endTime;
     @Getter private final String endTime_s;
+    @Getter(lazy = true)
+    private final Duration duration = computeDuration();
+
+    private Duration computeDuration(){
+        return Utils.getLocalDuration(startTime,endTime);
+    }
 }

@@ -65,7 +65,11 @@ public class Main {
 
             Statement stmt = null;
             stmt = c.createStatement();
-            String query = "SELECT * FROM recording_task WHERE timestamp >= '" + scenario.getStartTime_s() + "' AND timestamp <= '" + scenario.getEndTime_s() + "';";
+            String query =
+                    "SELECT * FROM recording_task WHERE timestamp >= '" +
+                    scenario.getStartTime_s() +
+                    "' AND timestamp <= '" +
+                    scenario.getEndTime_s() + "';";
 
             System.out.println(query);
 
