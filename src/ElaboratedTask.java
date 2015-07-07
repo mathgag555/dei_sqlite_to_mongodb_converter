@@ -10,10 +10,13 @@ import java.util.ArrayList;
 public class ElaboratedTask extends AbstractTask {
     @Getter
     private final ArrayList<Interval> segments;
+    @Getter
+    private final ArrayList<Event> events;
 
-    public ElaboratedTask(int taskid,ArrayList<Interval> segments){
+    public ElaboratedTask(int taskid, ArrayList<Interval> segments, ArrayList<Event> events) {
         super(taskid);
-        this.segments=segments;
+        this.segments = segments;
+        this.events = events;
     }
 
 }

@@ -12,6 +12,13 @@ public class Main {
         Connection c = null;
         String defaultdbName = "db_files"+ File.separator +"2015-06-26_17-46_EXPMCI23.db";
 
+             /*
+			 * BufferedReader br = new BufferedReader(new InputStreamReader(
+			 * System.in));
+			 * System.out.println("Entrez le nom complet du fichier"); String
+			 * dbName = br.readLine();
+			 */
+
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:" + defaultdbName);
@@ -20,12 +27,12 @@ public class Main {
             Scenario scenario = parseScenarios(c);
             Collection<RawTask> rawTasks = parseEnregistrements(c, scenario).values();
             List<ElaboratedTask> elaboratedTasks = rawTasks.stream()
-                    .map(rawTask -> rawTask.elaborate(scenario.getStartTime()))
+                    .map(rawTask -> rawTask.elaborate(scenario.getStartTime(), scenario.getEndTime()))
                     .collect(Collectors.toList());
 
             rawTasks.forEach(rawTask -> {
                 System.out.println(rawTask);
-                System.out.println(rawTask.elaborate(scenario.getStartTime()));
+                System.out.println(rawTask.elaborate(scenario.getStartTime(), scenario.getEndTime()));
         });
 
             c.close();
@@ -67,12 +74,6 @@ public class Main {
     private static HashMap<Integer,RawTask> parseEnregistrements(Connection c, Scenario scenario){
         HashMap<Integer,RawTask> tasks = new HashMap<>();
         try {
-			/*
-			 * BufferedReader br = new BufferedReader(new InputStreamReader(
-			 * System.in));
-			 * System.out.println("Entrez le nom complet du fichier"); String
-			 * dbName = br.readLine();
-			 */
 
             Statement stmt = null;
             stmt = c.createStatement();
