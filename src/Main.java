@@ -1,5 +1,9 @@
 import java.io.File;
+import java.io.IOException;
 import java.lang.System;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,19 +13,37 @@ import java.util.stream.Collectors;
 public class Main {
 
 	public static void main(String[] args) {
-        Connection c = null;
-        String defaultdbName = "db_files"+ File.separator +"2015-06-26_17-46_EXPMCI23.db";
+        String dbName = null;
+        List<Experimentation> experimentations = null;
 
-             /*
-			 * BufferedReader br = new BufferedReader(new InputStreamReader(
-			 * System.in));
-			 * System.out.println("Entrez le nom complet du fichier"); String
-			 * dbName = br.readLine();
-			 */
+        try{
+
+            experimentations = Files.walk(Paths.get("db_files"))
+                    .filter(path -> !path.toFile().isDirectory())
+                    .map(Main::parseExperimentation)
+                    .collect(Collectors.toList());
+
+            System.out.println("////////////////////////////////////");
+            experimentations.forEach(System.out::println);
+
+
+        } catch (NullPointerException | IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    //TODO Creer une collection d'expé avec 2 expé
+    //TODO Loop sur le dossier pour toutes les expé
+
+    private static Experimentation parseExperimentation(Path dbPath){
+        Connection c = null;
+        Path dbName = dbPath;
+        Experimentation experimentation = null;
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:" + defaultdbName);
+            c = DriverManager.getConnection("jdbc:sqlite:" + dbName); ////// à verifier
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
             Scenario scenario = parseScenarios(c);
@@ -30,15 +52,25 @@ public class Main {
                     .map(rawTask -> rawTask.elaborate(scenario.getStartTime(), scenario.getEndTime()))
                     .collect(Collectors.toList());
 
-            rawTasks.forEach(rawTask -> {
+/*            rawTasks.forEach(rawTask -> {
                 System.out.println(rawTask);
                 System.out.println(rawTask.elaborate(scenario.getStartTime(), scenario.getEndTime()));
-        });
+            });*/
+
+            experimentation = new Experimentation(scenario, rawTasks, elaboratedTasks);
+
+            System.out.println(experimentation);
 
             c.close();
         } catch (SQLException | ClassNotFoundException e){
             e.printStackTrace();
+            System.err.println(dbName);
         }
+
+
+
+        System.out.println("ParseExperimentation operation done successfully");
+        return experimentation;
     }
 
     private static Scenario parseScenarios(Connection c) {

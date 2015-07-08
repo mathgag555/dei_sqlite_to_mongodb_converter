@@ -7,10 +7,15 @@ import java.time.LocalDateTime;
  * Created by ranj2004 on 15-06-30.
  */
 @ToString
-public class Event {
+public class Event implements Comparable<Event> {
     public Event(String timestamp, State state) {
         this.timestamp = Utils.parseTimeStamp(timestamp);
         this.state = state;
+    }
+
+    @Override
+    public int compareTo(Event o) {
+        return this.timestamp.toString().compareTo(o.getTimestamp().toString());
     }
 
     enum State {
