@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.lang.System;
 import java.nio.file.Files;
@@ -23,18 +22,12 @@ public class Main {
                     .map(Main::parseExperimentation)
                     .collect(Collectors.toList());
 
-            System.out.println("////////////////////////////////////");
             experimentations.forEach(System.out::println);
-
 
         } catch (NullPointerException | IOException e){
             e.printStackTrace();
         }
-
     }
-
-    //TODO Creer une collection d'expé avec 2 expé
-    //TODO Loop sur le dossier pour toutes les expé
 
     private static Experimentation parseExperimentation(Path dbPath){
         Connection c = null;
@@ -43,7 +36,7 @@ public class Main {
 
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:" + dbName); ////// à verifier
+            c = DriverManager.getConnection("jdbc:sqlite:" + dbName);
             c.setAutoCommit(false);
             System.out.println("Opened database successfully");
             Scenario scenario = parseScenarios(c);
@@ -66,8 +59,6 @@ public class Main {
             e.printStackTrace();
             System.err.println(dbName);
         }
-
-
 
         System.out.println("ParseExperimentation operation done successfully");
         return experimentation;
