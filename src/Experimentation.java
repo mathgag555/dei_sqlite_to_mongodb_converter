@@ -3,6 +3,8 @@ import lombok.ToString;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by gagm2737 on 2015-07-07.
@@ -12,24 +14,28 @@ public class Experimentation {
     @Getter private final Scenario scenario;
     @Getter private final Collection<RawTask> rawTasks;
     @Getter private final List<ElaboratedTask> tasks;
+
     @Getter private final String name;
     @Getter private final String date;
     @Getter private final String time;
+    @Getter private final double duration;
 
     public Experimentation(Scenario scenario, Collection<RawTask> rawTasks, List<ElaboratedTask> tasks){
         this.scenario = scenario;
         this.rawTasks = rawTasks;
         this.tasks = tasks;
-        this.name = Utils.parseName(scenario.getName());
+        this.name = parseName(scenario.getName());
         this.date = Utils.parseDate(scenario.getStartTime());
         this.time = Utils.parseTime(scenario.getStartTime());
+        long deltaSeconds = scenario.getDuration().getSeconds() - (scenario.getDuration().toMinutes() * 60);
+        this.duration = scenario.getDuration().toMinutes() + deltaSeconds / 60.0;
     }
 
-
-
-
-
-
-
-
+    public static String parseName(String name){
+        String foundName = null;
+        Pattern pattern = Pattern.compile("^.*(EXP\\w+)$");
+        Matcher matcher = pattern.matcher(name);
+        matcher.matches();
+        return matcher.group(1);
+    }
 }
