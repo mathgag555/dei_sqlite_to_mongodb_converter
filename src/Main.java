@@ -1,9 +1,18 @@
+import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.sun.org.apache.bcel.internal.classfile.Unknown;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
 import java.io.IOException;
 import java.lang.System;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +25,6 @@ public class Main {
         List<Experimentation> experimentations = null;
 
         try{
-
             experimentations = Files.walk(Paths.get("db_files"))
                     .filter(path -> !path.toFile().isDirectory())
                     .map(Main::parseExperimentation)
@@ -27,6 +35,57 @@ public class Main {
         } catch (NullPointerException | IOException e){
             e.printStackTrace();
         }
+
+        try{
+            MongoDatabase db = connectToMongoDB();
+            writeExperimentationsToMongo(db, experimentations);
+
+        }catch (UnknownHostException e){
+            e.printStackTrace();
+        }
+    }
+
+    private static MongoDatabase connectToMongoDB() throws UnknownHostException{
+        String host = "10.44.163.154:27017";
+        ServerAddress sa = new ServerAddress(host);
+        String dbname = "admin";
+
+        MongoClient mc = new MongoClient(sa);
+        return mc.getDatabase(dbname);
+    }
+
+    private static void writeExperimentationsToMongo(MongoDatabase db, List<Experimentation> experimentations){
+        String collectionName = "experimentations";
+        MongoCollection<Document> collection = db.getCollection(collectionName);
+        ArrayList<Document> documents = new ArrayList<Document>();
+
+        experimentations.forEach(experimentation -> {
+            Document document = new Document();
+            document.put("name", experimentation.getName());
+            document.put("duration", experimentation.getDurationInMins());
+            document.put("date", experimentation.getDate());
+            document.put("time", experimentation.getTime());
+            document.put("project", "5auLGd5WdDwvQLXtD");
+            document.put("owner", "Y8kZyjRtZjKSi6Qn4");
+            documents.add(document);
+            collection.insertOne(document);
+            ObjectId id = (ObjectId)document.get("_id");
+            System.out.println("id:" + id);
+        });
+
+
+ /*       document.put("name",experimentations.get(0).getName());
+        document.put("duration",experimentations.get(0).getDurationInMins());
+        document.put("date",experimentations.get(0).getDate());
+        document.put("time",experimentations.get(0).getTime());
+        document.put("project","5auLGd5WdDwvQLXtD");
+        document.put("owner", "Y8kZyjRtZjKSi6Qn4");*/
+
+        //collection.insertOne(document);
+        //collection.insertMany(documents);
+
+        //ObjectId id = (ObjectId)document.get("_id");
+        //System.out.println("id:" + id);
     }
 
     private static Experimentation parseExperimentation(Path dbPath){
