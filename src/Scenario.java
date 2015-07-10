@@ -25,9 +25,9 @@ public class Scenario {
     @Getter private final LocalDateTime endTime;
     @Getter private final String endTime_s;
     @Getter(lazy = true)
-    private final Duration duration = computeDuration();
+    private final double durationInMins = computeDuration();
 
-    private Duration computeDuration(){
+    private double computeDuration(){
         return Utils.getLocalDuration(startTime,endTime);
     }
 }

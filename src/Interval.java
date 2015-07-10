@@ -10,6 +10,6 @@ import java.time.Duration;
 @ToString
 @RequiredArgsConstructor
 public class Interval {
-    @Getter private final Duration start;
-    @Getter private final Duration stop;
+    @Getter private final double start;
+    @Getter private final double stop;
 }

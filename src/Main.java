@@ -52,7 +52,7 @@ public class Main {
 
             experimentation = new Experimentation(scenario, rawTasks, elaboratedTasks);
 
-            System.out.println(experimentation);
+            //System.out.println(experimentation);
 
             c.close();
         } catch (SQLException | ClassNotFoundException e){
@@ -80,7 +80,7 @@ public class Main {
 
             scenario = new Scenario(name, startTime, endTime);
 
-            System.out.println(scenario);
+            //System.out.println(scenario);
 
             rs.close();
             stmt.close();

@@ -18,7 +18,7 @@ public class Experimentation {
     @Getter private final String name;
     @Getter private final String date;
     @Getter private final String time;
-    @Getter private final double duration;
+    @Getter private final double durationInMins;
 
     public Experimentation(Scenario scenario, Collection<RawTask> rawTasks, List<ElaboratedTask> tasks){
         this.scenario = scenario;
@@ -27,12 +27,10 @@ public class Experimentation {
         this.name = parseName(scenario.getName());
         this.date = Utils.parseDate(scenario.getStartTime());
         this.time = Utils.parseTime(scenario.getStartTime());
-        long deltaSeconds = scenario.getDuration().getSeconds() - (scenario.getDuration().toMinutes() * 60);
-        this.duration = scenario.getDuration().toMinutes() + deltaSeconds / 60.0;
+        this.durationInMins = scenario.getDurationInMins();
     }
 
     public static String parseName(String name){
-        String foundName = null;
         Pattern pattern = Pattern.compile("^.*(EXP\\w+)$");
         Matcher matcher = pattern.matcher(name);
         matcher.matches();

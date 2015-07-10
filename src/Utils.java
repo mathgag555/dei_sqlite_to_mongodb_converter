@@ -23,8 +23,13 @@ public class Utils {
         return time.format(timeFormatter);
     }
 
-    public static Duration getLocalDuration(LocalDateTime start, LocalDateTime end) {
-        return Duration.between(start, end);
+    public static double getLocalDuration(LocalDateTime start, LocalDateTime end) {
+        return toRawMinutes(Duration.between(start, end));
+    }
+
+    public static double toRawMinutes(Duration duration){
+        long deltaSeconds = duration.getSeconds() - (duration.toMinutes() * 60);
+        return duration.toMinutes() + deltaSeconds / 60.0;
     }
 
 }
