@@ -1,5 +1,3 @@
-import com.sun.deploy.util.OrderedHashSet;
-import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
@@ -12,7 +10,7 @@ import java.util.*;
 public class RawTask extends AbstractTask {
 
 
-    private final List<Event> events = new ArrayList<Event>();
+    private final List<Event> events = new ArrayList<>();
 
     public RawTask(int taskid) {
         super(taskid);
@@ -23,7 +21,11 @@ public class RawTask extends AbstractTask {
         return new ElaboratedTask(taskid, segments, events);
     }
 
-    public Collection<Event> getEvents(){
+    public void addEvent(Event event){
+        events.add(event);
+    }
+
+    public Collection<Event> getSortedEvents(){
         Collections.sort(events);
         return events;
     }
@@ -31,7 +33,7 @@ public class RawTask extends AbstractTask {
     private ArrayList<Interval> eventsToSegments(LocalDateTime scenarioStart, LocalDateTime scenarioEnd) {
         ArrayList<Interval> segments = new ArrayList<>();
 
-        Optional<Event> testEvent = events.stream().reduce((firstEvent, lastEvent) -> {
+        Optional<Event> testEvent = getSortedEvents().stream().reduce((firstEvent, lastEvent) -> {
             if (firstEvent.getState().isActive()) {
                 if (!lastEvent.getState().isActive()) {
                     Interval interval = new Interval(Utils.getLocalDuration(firstEvent.getTimestamp(), scenarioStart), Utils.getLocalDuration(lastEvent.getTimestamp(), scenarioStart));
@@ -50,15 +52,6 @@ public class RawTask extends AbstractTask {
                 segments.add(interval);
             }
         }));
-
-        // version afonctionnelle, """"plus simple""""
-/*        if(testEvent.isPresent()){
-            if(testEvent.get().getState().isActive()){
-                Interval interval = new Interval(Utils.getLocalDuration(testEvent.get().getTimestamp(), scenarioStart),
-                        Utils.getLocalDuration(scenarioEnd, scenarioStart));
-                segments.add(interval);
-            }
-        }*/
 
         return segments;
     }

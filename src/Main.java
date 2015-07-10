@@ -118,7 +118,7 @@ public class Main {
                 if((recoveredTask=tasks.putIfAbsent(taskId,task))!=null){
                     task=recoveredTask;
                 }
-                task.getEvents().add(event);
+                task.addEvent(event);
             }
             rs.close();
             stmt.close();
