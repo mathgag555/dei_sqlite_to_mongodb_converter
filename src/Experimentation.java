@@ -1,4 +1,5 @@
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Collection;
@@ -19,6 +20,9 @@ public class Experimentation {
     @Getter private final String date;
     @Getter private final String time;
     @Getter private final double durationInMins;
+
+    // Id given by MongoDB when inserted. Used to link an Experimentation to a List<ElaboratedTask>
+    @Getter @Setter private String _id = "";
 
     public Experimentation(Scenario scenario, Collection<RawTask> rawTasks, List<ElaboratedTask> tasks){
         this.scenario = scenario;

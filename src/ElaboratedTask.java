@@ -1,7 +1,6 @@
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,11 +9,11 @@ import java.util.List;
 @ToString(callSuper = true)
 public class ElaboratedTask extends AbstractTask {
     @Getter
-    private final ArrayList<Interval> segments;
+    private final List<Interval> segments;
     @Getter
     private final List<Event> events;
 
-    public ElaboratedTask(int taskid, ArrayList<Interval> segments, List<Event> events) {
+    public ElaboratedTask(int taskid, List<Interval> segments, List<Event> events) {
         super(taskid);
         this.segments = segments;
         this.events = events;

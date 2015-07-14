@@ -36,7 +36,7 @@ public class RawTask extends AbstractTask {
         Optional<Event> testEvent = getSortedEvents().stream().reduce((firstEvent, lastEvent) -> {
             if (firstEvent.getState().isActive()) {
                 if (!lastEvent.getState().isActive()) {
-                    Interval interval = new Interval(Utils.getLocalDuration(firstEvent.getTimestamp(), scenarioStart), Utils.getLocalDuration(lastEvent.getTimestamp(), scenarioStart));
+                    Interval interval = new Interval(Utils.getLocalDuration(scenarioStart, firstEvent.getTimestamp()), Utils.getLocalDuration(scenarioStart, lastEvent.getTimestamp()));
                     segments.add(interval);
                 } else {
                     System.err.println("WARNING : ACTIVE event cannot be followed by an ACTIVE event.");
@@ -47,8 +47,8 @@ public class RawTask extends AbstractTask {
 
         testEvent.ifPresent((event -> {
             if (event.getState().isActive()) {
-                Interval interval = new Interval(Utils.getLocalDuration(event.getTimestamp(), scenarioStart),
-                        Utils.getLocalDuration(scenarioEnd, scenarioStart));
+                Interval interval = new Interval(Utils.getLocalDuration(scenarioStart, event.getTimestamp()),
+                        Utils.getLocalDuration(scenarioStart, scenarioEnd));
                 segments.add(interval);
             }
         }));

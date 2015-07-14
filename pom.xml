@@ -41,5 +41,11 @@ http://www.w3.org/2001/XMLSchema-instance ">
       <artifactId>bson</artifactId>
       <version>3.0.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20141113</version>
+    </dependency>
+
   </dependencies>
 </project>
