@@ -34,8 +34,8 @@ public class RawTask extends AbstractTask {
         ArrayList<Interval> segments = new ArrayList<>();
 
         Optional<Event> testEvent = getSortedEvents().stream().reduce((firstEvent, lastEvent) -> {
-            if (firstEvent.getState().isActive()) {
-                if (!lastEvent.getState().isActive()) {
+            if (firstEvent.isStateActive()) {
+                if (!lastEvent.isStateActive()) {
                     Interval interval = new Interval(Utils.getLocalDuration(scenarioStart, firstEvent.getTimestamp()), Utils.getLocalDuration(scenarioStart, lastEvent.getTimestamp()));
                     segments.add(interval);
                 } else {
@@ -46,7 +46,7 @@ public class RawTask extends AbstractTask {
         });
 
         testEvent.ifPresent((event -> {
-            if (event.getState().isActive()) {
+            if (event.isStateActive()) {
                 Interval interval = new Interval(Utils.getLocalDuration(scenarioStart, event.getTimestamp()),
                         Utils.getLocalDuration(scenarioStart, scenarioEnd));
                 segments.add(interval);

@@ -81,15 +81,15 @@ public class Main {
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
         //exemples
-        Interval obj = new Interval(2, 4);
-        Event ev = new Event("2014-11-28_15h24.06", Event.State.ACTIVE);
+        //Interval obj = new Interval(2, 4);
+       // Event ev = new Event("2014-11-28_15h24.06", "ACTIVE");
 
         // Conversion
-        JSONObject jsonObject = new JSONObject(obj);
-        DBObject dbObject = Utils.encode(jsonObject);
+        //JSONObject jsonObject = new JSONObject(obj);
+        //DBObject dbObject = Utils.encode(jsonObject);
 
-        //TODO prob avec Events : liste de State fonctionne pas
-        //TODO convertir tous les Interval d'une expe
+        //DONE prob avec Events : liste de State fonctionne pas
+        //DONE convertir tous les Interval d'une expe (testé sur EXP21)
         //TODO convertir tous les Event d'une expe
         //TODO Boucler pour toutes les expe
 
@@ -223,7 +223,7 @@ public class Main {
                 String state = rs.getString("state");
                 String timestamp = rs.getString("timestamp");
                 task=new RawTask(taskId);
-                event=new Event(timestamp,Event.State.valueOf(state));
+                event=new Event(timestamp,state);
                 if((recoveredTask=tasks.putIfAbsent(taskId,task))!=null){
                     task=recoveredTask;
                 }

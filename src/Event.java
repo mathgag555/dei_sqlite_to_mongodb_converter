@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  */
 @ToString
 public class Event implements Comparable<Event> {
-    public Event(String timestamp, State state) {
+    public Event(String timestamp, String state) {
         this.timestamp = Utils.parseTimeStamp(timestamp);
         this.state = state;
     }
@@ -18,17 +18,13 @@ public class Event implements Comparable<Event> {
         return this.timestamp.toString().compareTo(o.getTimestamp().toString());
     }
 
-    enum State {
-        ACTIVE,
-        FINISHED,
-        PAUSED;
-        public boolean isActive(){
-            return this==ACTIVE;
-        }
+    public boolean isStateActive() {
+        return state == "ACTIVE";
     }
 
     @Getter
     private final LocalDateTime timestamp;
+
     @Getter
-    private final State state;
+    private final String state;
 }
