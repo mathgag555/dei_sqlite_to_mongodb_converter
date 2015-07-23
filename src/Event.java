@@ -19,7 +19,7 @@ public class Event implements Comparable<Event> {
     }
 
     public boolean isStateActive() {
-        return state == "ACTIVE";
+        return state.equals("ACTIVE");
     }
 
     @Getter

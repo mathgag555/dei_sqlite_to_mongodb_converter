@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -38,10 +37,15 @@ public class Main {
 
         try{
             MongoDatabase db = connectToMongoDB();
+
+            // Insérer chaque expérimentation dans la BD
             writeExperimentationsToMongo(db, experimentations);
 
+            // Insérer toutes les événements de tâches de chaque expérimentation dans la BD
+            experimentations.forEach(experimentation -> writeTasksToMongo(db, experimentation));
+
             //Commencer avec une seule expe
-            writeTasksToMongo(db, experimentations.get(3));
+            //writeTasksToMongo(db, experimentations.get(3));
 
         }catch (UnknownHostException e){
             e.printStackTrace();
@@ -80,19 +84,6 @@ public class Main {
         String collectionName = "tasks";
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
-        //exemples
-        //Interval obj = new Interval(2, 4);
-       // Event ev = new Event("2014-11-28_15h24.06", "ACTIVE");
-
-        // Conversion
-        //JSONObject jsonObject = new JSONObject(obj);
-        //DBObject dbObject = Utils.encode(jsonObject);
-
-        //DONE prob avec Events : liste de State fonctionne pas
-        //DONE convertir tous les Interval d'une expe (testé sur EXP21)
-        //TODO convertir tous les Event d'une expe
-        //TODO Boucler pour toutes les expe
-
         experimentation.getTasks().forEach(elaboratedTask -> {
 
             List<Event> events = elaboratedTask.getEvents();
@@ -108,34 +99,15 @@ public class Main {
             System.out.println("Events :" + events + " pour expe : " + experimentation.getName() + " taskid:" + elaboratedTask.getTaskid() );
             System.out.println("dbObjectIntervals :" + dbObjectIntervals + " pour expe : " + experimentation.getName() + " taskid:" + elaboratedTask.getTaskid() );
 
-
-
             Document document = new Document();
             document.put("taskId", elaboratedTask.getTaskid());
             document.put("expeId", experimentation.get_id());
             document.put("events", dbObjectEvents);
             document.put("segments", dbObjectIntervals);
-            //document.put("events", elaboratedTask.getEvents());
-            //document.put("segments", elaboratedTask.getSegments());
-
             document.put("project", "5auLGd5WdDwvQLXtD");
             document.put("owner", "Y8kZyjRtZjKSi6Qn4");
             collection.insertOne(document);
         });
-
-
-/*            Document document = new Document();
-            document.put("name", experimentation.getName());
-            document.put("duration", experimentation.getDurationInMins());
-            document.put("date", experimentation.getDate());
-            document.put("time", experimentation.getTime());
-            document.put("project", "5auLGd5WdDwvQLXtD");
-            document.put("owner", "Y8kZyjRtZjKSi6Qn4");
-            collection.insertOne(document);*/
-
-/*            experimentation.set_id(document.get("_id").toString());
-            System.out.println("expeid:" + experimentation.get_id());*/
-
     }
 
     private static Experimentation parseExperimentation(Path dbPath){
