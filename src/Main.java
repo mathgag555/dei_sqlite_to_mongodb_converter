@@ -4,6 +4,7 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.json.JSONArray;
 
 import java.io.IOException;
@@ -38,10 +39,10 @@ public class Main {
         try{
             MongoDatabase db = connectToMongoDB();
 
-            // Insérer chaque expérimentation dans la BD
+            // Insï¿½rer chaque expï¿½rimentation dans la BD
             writeExperimentationsToMongo(db, experimentations);
 
-            // Insérer toutes les événements de tâches de chaque expérimentation dans la BD
+            // Insï¿½rer toutes les ï¿½vï¿½nements de tï¿½ches de chaque expï¿½rimentation dans la BD
             experimentations.forEach(experimentation -> writeTasksToMongo(db, experimentation));
 
             //Commencer avec une seule expe
@@ -53,7 +54,8 @@ public class Main {
     }
 
     private static MongoDatabase connectToMongoDB() throws UnknownHostException{
-        String host = "10.44.163.154:27017";
+//        String host = "10.44.163.154:27017";
+        String host = "127.0.0.1:27017";
         ServerAddress sa = new ServerAddress(host);
         String dbname = "admin";
 
@@ -62,17 +64,18 @@ public class Main {
     }
 
     private static void writeExperimentationsToMongo(MongoDatabase db, List<Experimentation> experimentations){
-        String collectionName = "experimentations";
+        String collectionName = "exps";
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
         experimentations.forEach(experimentation -> {
             Document document = new Document();
+            document.put("_id",new ObjectId().toHexString());
             document.put("name", experimentation.getName());
             document.put("duration", experimentation.getDurationInMins());
             document.put("date", experimentation.getDate());
             document.put("time", experimentation.getTime());
-            document.put("project", "5auLGd5WdDwvQLXtD");
-            document.put("owner", "Y8kZyjRtZjKSi6Qn4");
+            document.put("projectId", "5auLGd5WdDwvQLXtD");
+            document.put("ownerId", "Y8kZyjRtZjKSi6Qn4");
             collection.insertOne(document);
 
             experimentation.set_id(document.get("_id").toString());
@@ -81,7 +84,7 @@ public class Main {
     }
 
     private static void writeTasksToMongo(MongoDatabase db, Experimentation experimentation) {
-        String collectionName = "tasks";
+        String collectionName = "plugins.tasks";
         MongoCollection<Document> collection = db.getCollection(collectionName);
 
         experimentation.getTasks().forEach(elaboratedTask -> {
@@ -100,12 +103,13 @@ public class Main {
             System.out.println("dbObjectIntervals :" + dbObjectIntervals + " pour expe : " + experimentation.getName() + " taskid:" + elaboratedTask.getTaskid() );
 
             Document document = new Document();
-            document.put("taskId", elaboratedTask.getTaskid());
-            document.put("expeId", experimentation.get_id());
+            document.put("_id",new ObjectId().toHexString());
+            document.put("taskTypeId", elaboratedTask.getTaskid());
+            document.put("expId", experimentation.get_id());
             document.put("events", dbObjectEvents);
             document.put("segments", dbObjectIntervals);
-            document.put("project", "5auLGd5WdDwvQLXtD");
-            document.put("owner", "Y8kZyjRtZjKSi6Qn4");
+            document.put("projectId", "5auLGd5WdDwvQLXtD");
+            document.put("ownerId", "Y8kZyjRtZjKSi6Qn4");
             collection.insertOne(document);
         });
     }
