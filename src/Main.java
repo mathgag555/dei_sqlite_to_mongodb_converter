@@ -54,10 +54,10 @@ public class Main {
     }
 
     private static MongoDatabase connectToMongoDB() throws UnknownHostException{
-//        String host = "10.44.163.154:27017";
-        String host = "127.0.0.1:27017";
+        String host = "10.44.163.154:27017";
+//        String host = "127.0.0.1:27017";
         ServerAddress sa = new ServerAddress(host);
-        String dbname = "admin";
+        String dbname = "colab";
 
         MongoClient mc = new MongoClient(sa);
         return mc.getDatabase(dbname);
